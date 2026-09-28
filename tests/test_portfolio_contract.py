@@ -1,0 +1,80 @@
+from pathlib import Path
+import unittest
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class PortfolioContractTests(unittest.TestCase):
+    def test_managed_product_contract_is_declared(self):
+        app = (ROOT / "app.toml").read_text(encoding="utf-8")
+        self.assertIn('name   = "HAURUX TECH STUDIO - ERP UI/UX Portfolio"', app)
+        self.assertIn('start  = "python3 -m http.server $PORT --bind 0.0.0.0"', app)
+        self.assertIn('health = "/"', app)
+
+
+    def test_page_targets_the_bid_brief_and_identity(self):
+        html = (ROOT / "index.html").read_text(encoding="utf-8")
+        for phrase in (
+            "HAURUX TECH STUDIO",
+            "18228077326zzh@gmail.com",
+            "User",
+            "Sales",
+            "PR / PO",
+            "IMS",
+            "Accounting",
+            "Concept / Demo",
+            "Discuss your ERP",
+        ):
+            self.assertIn(phrase, html)
+
+
+    def test_interactive_proof_hooks_exist(self):
+        html = (ROOT / "index.html").read_text(encoding="utf-8")
+        for hook in (
+            'data-prototype="dashboard"',
+            'data-prototype="users"',
+            'data-prototype="procurement"',
+            'data-prototype="inventory"',
+            'data-prototype="sales"',
+            'data-prototype="finance"',
+            'data-workflow="procure"',
+            'data-workflow="fulfil"',
+            'data-workflow="reorder"',
+        ):
+            self.assertIn(hook, html)
+
+    def test_every_erp_module_has_real_screen_content(self):
+        html = (ROOT / "index.html").read_text(encoding="utf-8")
+        for screen in (
+            "Role permission matrix",
+            "PR approval queue",
+            "Inventory movement ledger",
+            "Sales fulfilment board",
+            "Accounting reconciliation",
+        ):
+            self.assertIn(screen, html)
+        self.assertNotIn("screen ready", html)
+        self.assertNotIn("can be expanded from this view", html)
+
+    def test_screen_inventory_and_downloadable_portfolio_exist(self):
+        html = (ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertIn('id="screenInventory"', html)
+        self.assertIn('href="assets/HAURUX_ERP_UIUX_Portfolio.pdf"', html)
+        self.assertIn("37 core web screens", html)
+        self.assertTrue((ROOT / "assets" / "HAURUX_ERP_UIUX_Portfolio.pdf").is_file())
+
+    def test_public_contact_is_direct_and_generic(self):
+        html = (ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertIn("mailto:18228077326zzh@gmail.com", html)
+        self.assertIn("Discuss your ERP", html)
+
+
+    def test_avatar_asset_is_present(self):
+        avatar = ROOT / "assets" / "avatar.png"
+        self.assertTrue(avatar.is_file())
+        self.assertGreater(avatar.stat().st_size, 10_000)
+
+    def test_content_is_visible_without_scroll_javascript(self):
+        html = (ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertNotIn(".reveal { opacity: 0;", html)
