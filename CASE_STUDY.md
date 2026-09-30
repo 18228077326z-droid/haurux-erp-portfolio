@@ -1,10 +1,12 @@
 # ERP UI/UX Concept Portfolio
 
+[English](CASE_STUDY.md) | [Simplified Chinese](CASE_STUDY.zh-CN.md)
+
 **HAURUX TECH STUDIO**<br>
 **Project type:** Concept / Demo<br>
 **Focus:** ERP information architecture, connected workflows, role-aware controls, responsive interfaces, and design systems
 
-[Live Demo](https://18228077326z-droid.github.io/haurux-erp-portfolio/) | [Download PDF](https://18228077326z-droid.github.io/haurux-erp-portfolio/assets/HAURUX_ERP_UIUX_Portfolio.pdf) | [Repository Overview](README.md)
+[Live Demo](https://18228077326z-droid.github.io/haurux-erp-portfolio/) | [Download PDF](https://18228077326z-droid.github.io/haurux-erp-portfolio/assets/HAURUX_ERP_UIUX_Portfolio.pdf) | [Repository Overview](README.md) | [Chinese Demo](https://18228077326z-droid.github.io/haurux-erp-portfolio/zh/) | [Chinese PDF](https://18228077326z-droid.github.io/haurux-erp-portfolio/assets/HAURUX_ERP_UIUX_Portfolio_zh-CN.pdf)
 
 ![HAURUX TECH STUDIO ERP portfolio overview](assets/social-preview.png)
 

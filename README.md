@@ -2,9 +2,7 @@
 
 ## ERP UI/UX Concept Portfolio
 
-![Portfolio status](https://img.shields.io/badge/status-concept%20%2F%20demo-0f766e)
-![Interface scope](https://img.shields.io/badge/scope-37%20screens-111827)
-![Delivery](https://img.shields.io/badge/delivery-responsive%20web-2563eb)
+[English](README.md) | [Simplified Chinese](README.zh-CN.md)
 
 **Concept / Demo** | Responsive web ERP | 37-screen information architecture | Three connected workflows
 
@@ -12,7 +10,7 @@
 
 This evidence-first case study explores how a complex ERP can make roles, approvals, operational risk, and cross-module handoffs easier to understand. It combines a working front-end prototype, a proposed 37-screen scope map, real interface captures, and a downloadable portfolio.
 
-[**Live Demo**](https://18228077326z-droid.github.io/haurux-erp-portfolio/) | [**Download PDF**](https://18228077326z-droid.github.io/haurux-erp-portfolio/assets/HAURUX_ERP_UIUX_Portfolio.pdf) | [**Read the Case Study**](CASE_STUDY.md)
+[**Live Demo**](https://18228077326z-droid.github.io/haurux-erp-portfolio/) | [**Download PDF**](https://18228077326z-droid.github.io/haurux-erp-portfolio/assets/HAURUX_ERP_UIUX_Portfolio.pdf) | [**Read the Case Study**](CASE_STUDY.md) | [**Chinese Demo**](https://18228077326z-droid.github.io/haurux-erp-portfolio/zh/) | [**Chinese PDF**](https://18228077326z-droid.github.io/haurux-erp-portfolio/assets/HAURUX_ERP_UIUX_Portfolio_zh-CN.pdf)
 
 > This is a tailored Concept / Demo created from a limited public brief. It uses synthetic data and does not represent a launched client system, a production deployment, or measured business results.
 
@@ -105,7 +103,7 @@ Run the complete contract suite:
 python3 -m unittest discover -s tests -v
 ```
 
-The contracts check the managed static product, core ERP content, interaction hooks, public documentation, image evidence, share metadata, and GitHub Pages publishing files.
+The contracts check the managed static product, core ERP content, interaction hooks, public documentation, image evidence, share metadata, and publishing contract. GitHub Pages publishes the verified public tree from `main /`.
 
 ## Repository guide
 
@@ -117,8 +115,7 @@ The contracts check the managed static product, core ERP content, interaction ho
 | `docs/images/` | Real desktop and mobile captures from the prototype |
 | `CASE_STUDY.md` | Detailed design rationale, flows, states, and limits |
 | `tests/` | Executable content and publishing contracts |
-| `.nojekyll` | Keeps the static portfolio unprocessed during GitHub Pages publishing |
-| `app.toml` | Declares the managed local product and its health endpoint |
+| `.github/public-files.txt` | Exact allowlist for the public repository tree |
 
 ## Integrity and rights
 

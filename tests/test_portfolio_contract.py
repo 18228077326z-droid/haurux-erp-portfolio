@@ -6,13 +6,6 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PortfolioContractTests(unittest.TestCase):
-    def test_managed_product_contract_is_declared(self):
-        app = (ROOT / "app.toml").read_text(encoding="utf-8")
-        self.assertIn('name   = "HAURUX TECH STUDIO - ERP UI/UX Portfolio"', app)
-        self.assertIn('start  = "python3 -m http.server $PORT --bind 0.0.0.0"', app)
-        self.assertIn('health = "/"', app)
-
-
     def test_page_targets_the_bid_brief_and_identity(self):
         html = (ROOT / "index.html").read_text(encoding="utf-8")
         for phrase in (

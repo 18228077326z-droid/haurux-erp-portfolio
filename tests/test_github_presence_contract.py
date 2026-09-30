@@ -22,13 +22,16 @@ class GitHubPresenceContractTests(unittest.TestCase):
             ".gitignore",
             ".nojekyll",
             "CASE_STUDY.md",
+            "CASE_STUDY.zh-CN.md",
             "LICENSE.md",
             "README.md",
-            "app.toml",
+            "README.zh-CN.md",
             "assets/HAURUX_ERP_UIUX_Portfolio.pdf",
+            "assets/HAURUX_ERP_UIUX_Portfolio_zh-CN.pdf",
             "assets/avatar.png",
             "assets/favicon.png",
             "assets/social-preview.png",
+            "assets/social-preview-zh-CN.png",
             "docs/images/accounting.png",
             "docs/images/dashboard.png",
             "docs/images/inventory.png",
@@ -37,14 +40,53 @@ class GitHubPresenceContractTests(unittest.TestCase):
             "docs/images/procurement.png",
             "docs/images/role-permissions.png",
             "docs/images/sales.png",
+            "docs/images/zh-CN/accounting.png",
+            "docs/images/zh-CN/dashboard.png",
+            "docs/images/zh-CN/inventory.png",
+            "docs/images/zh-CN/mobile-accounting.png",
+            "docs/images/zh-CN/portfolio-cover.png",
+            "docs/images/zh-CN/procurement.png",
+            "docs/images/zh-CN/role-permissions.png",
+            "docs/images/zh-CN/sales.png",
             "index.html",
             "portfolio-print.html",
+            "portfolio-print.zh-CN.html",
+            "tests/test_chinese_portfolio_contract.py",
             "tests/test_github_presence_contract.py",
             "tests/test_portfolio_contract.py",
+            "zh/index.html",
         ))
         self.assertEqual(manifest, expected)
         for relative_path in manifest:
             self.assertTrue((ROOT / relative_path).is_file(), relative_path)
+
+    def test_public_source_manifest_excludes_internal_only_files(self):
+        manifest = read(".github/public-files.txt").splitlines()
+        forbidden_files = {
+            "BID_MESSAGE_ID.txt",
+            "app.toml",
+            "tests/test_managed_product_contract.py",
+            "tests/test_private_bid_contract.py",
+            "tests/test_profile_contract.py",
+        }
+        forbidden_prefixes = (
+            ".github/workflows/",
+            ".webtest/",
+            ".worktrees/",
+            "docs/superpowers/",
+            "github-profile/",
+            "scripts/",
+        )
+        self.assertTrue(forbidden_files.isdisjoint(manifest))
+        for relative_path in manifest:
+            self.assertFalse(
+                relative_path.startswith(forbidden_prefixes),
+                f"Internal-only path is public: {relative_path}",
+            )
+
+    def test_public_portfolio_tests_do_not_require_platform_files(self):
+        public_test = read("tests/test_portfolio_contract.py")
+        self.assertNotIn('ROOT / "app.toml"', public_test)
 
     def test_repository_readme_is_an_english_case_study_landing_page(self):
         readme = read("README.md")
@@ -58,9 +100,8 @@ class GitHubPresenceContractTests(unittest.TestCase):
             "User & Role",
             "Concept / Demo",
             PUBLIC_URL,
-            "status-concept%20%2F%20demo",
-            "scope-37%20screens",
-            "delivery-responsive%20web",
+            "Simplified Chinese",
+            "GitHub Pages publishes the verified public tree from `main /`",
         ):
             self.assertIn(phrase, readme)
         self.assertIsNone(re.search(r"[\u3400-\u9fff]", readme))
@@ -184,11 +225,35 @@ class GitHubPresenceContractTests(unittest.TestCase):
         self.assertIn("does not submit or export production data", html)
         self.assertIn("protoAction.addEventListener('click'", html)
 
-    def test_branch_pages_publish_set_is_complete(self):
-        self.assertTrue((ROOT / ".nojekyll").is_file())
+    def test_internal_github_actions_are_sane_when_available(self):
+        manifest = read(".github/public-files.txt").splitlines()
+        workflow_paths = (
+            ".github/workflows/verify.yml",
+            ".github/workflows/deploy-pages.yml",
+        )
+        for workflow_path in workflow_paths:
+            self.assertNotIn(workflow_path, manifest)
+
+        workflow_presence = [(ROOT / path).is_file() for path in workflow_paths]
+        self.assertIn(workflow_presence, ([False, False], [True, True]))
+        if not any(workflow_presence):
+            return
+
+        verify = read(workflow_paths[0])
+        deploy = read(workflow_paths[1])
+        self.assertIn("python3 -m unittest discover -s tests -v", verify)
+        self.assertIn("pull_request:", verify)
+        self.assertIn("workflow_run:", deploy)
+        self.assertIn("Verify Portfolio", deploy)
+        self.assertIn("github.event.workflow_run.conclusion == 'success'", deploy)
+        self.assertIn("actions/checkout@v7", verify)
+        self.assertIn("actions/setup-python@v7", verify)
+        self.assertIn("actions/configure-pages@v6", deploy)
+        self.assertIn("actions/upload-pages-artifact@v5", deploy)
+        self.assertIn("actions/deploy-pages@v5", deploy)
+        self.assertGreaterEqual((verify + deploy).count("persist-credentials: false"), 3)
+        self.assertNotIn("cp -R assets", deploy)
         for public_asset in (
-            "index.html",
-            "portfolio-print.html",
             "assets/HAURUX_ERP_UIUX_Portfolio.pdf",
             "assets/avatar.png",
             "assets/favicon.png",
@@ -196,7 +261,7 @@ class GitHubPresenceContractTests(unittest.TestCase):
             "docs/images/dashboard.png",
             "docs/images/role-permissions.png",
         ):
-            self.assertTrue((ROOT / public_asset).is_file(), public_asset)
+            self.assertIn(public_asset, deploy)
 
     def test_live_site_uses_only_relevant_erp_proof_images(self):
         html = read("index.html")
@@ -215,9 +280,13 @@ class GitHubPresenceContractTests(unittest.TestCase):
     def test_new_public_copy_has_no_em_or_en_dashes(self):
         copy_paths = (
             "README.md",
+            "README.zh-CN.md",
             "CASE_STUDY.md",
+            "CASE_STUDY.zh-CN.md",
             "LICENSE.md",
+            "zh/index.html",
             "portfolio-print.html",
+            "portfolio-print.zh-CN.html",
         )
         for path in copy_paths:
             content = read(path)
